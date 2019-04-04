@@ -29,14 +29,20 @@ void cargarcaract(struct TCaracteristicas * CaracPers);
 void mostrarcaract(struct TCaracteristicas * CaracPers);
 void cargar_datos(struct TDatos *puntero);
 void mostrar_datos(struct TDatos *a);
+void juego(struct TPersonaje, struct TPersonaje);
 
 int main(void){
+	
 	srand(time(NULL));
-	struct TPersonaje * Lista;
+	
+	struct TPersonaje * Lista, p1, p2;
 	int cant;
+	
 	printf("Cuantos personajes desea cargar?:\n");
 	scanf("%d", &cant);
+	
 	Lista = (struct TPersonaje *) malloc(sizeof(struct TPersonaje)*cant);
+	
 	for (int t = 0; t < cant; ++t)
 	{
 		fflush(stdin);
@@ -45,12 +51,14 @@ int main(void){
 		cargar_datos(Lista[t].DatosPersonales); // (personaje . datospersonales) (* Tdatos)
 		cargarcaract(Lista[t].Caracteristicas);
 	}
-	for (int k = 0; k < cant; ++k)
-	{
-		printf("\nPersonaje %d:\n", (k+1));
-		mostrar_datos(Lista[k].DatosPersonales);
-		mostrarcaract(Lista[k].Caracteristicas);
-	}
+	
+
+	p1= Lista[rand()%cant];
+	p2= Lista[rand()%cant];
+
+	juego(p1,p2);
+
+
 	return 0;
 }
 
@@ -127,3 +135,39 @@ void mostrar_datos(struct TDatos *a){
 	printf("\n");
 
 }
+
+//------------JUEGO-------------------------
+void juego(struct TPersonaje p1, struct TPersonaje p2){
+	
+	float PD1, ED1, VA1, PDEF1, DANIO1, PD2, ED2, VA2, PDEF2, DANIO2, MDP=50000;
+
+	mostrar_datos(p1.DatosPersonales);
+	mostrarcaract(p1.Caracteristicas);
+
+	mostrar_datos(p2.DatosPersonales);
+	mostrarcaract(p2.Caracteristicas);
+
+	for (int i = 1; i <= 3; ++i)
+	{
+		printf("---------ROUND %d---------", i);
+		
+		PD1 = p1.Caracteristicas.destreza * p1.Caracteristicas.fuerza * p1.Caracteristicas.Nivel;
+		ED1 = rand()%99 +1;
+		VA1 = (PD1 * ED1)/100;
+		PDEF1 = p1.Caracteristicas.Armadura * p1.Caracteristicas.velocidad;
+
+		PD2 = p2.Caracteristicas.destreza * p2.Caracteristicas.fuerza * p2.Caracteristicas.Nivel;
+		ED2 = rand()%99 +1;
+		VA2 = PD2 * ED2/100;
+		PDEF2 = p2.Caracteristicas.Armadura * p2.Caracteristicas.velocidad;
+
+		DAÑO1 = (VA1-PDEF2)/MDP)*100;
+
+	}
+
+
+}
+
+
+
+// Daño provocado en formula el EP no va
