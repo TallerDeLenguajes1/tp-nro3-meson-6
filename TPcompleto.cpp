@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <conio.h>
 //Declaracion de estructuras
 enum TRaza{Orco, Humano, Mago, Enano, Elfo};
 char Nombres[5][20]={"Merodeador", "Rompehuesos", "Algoritmico", "Proscripto", "Cruzamontanias"};
@@ -31,6 +32,7 @@ void cargarcaract(struct TCaracteristicas * CaracPers);
 void mostrarcaract(struct TCaracteristicas * CaracPers);
 void cargar_datos(struct TDatos *puntero);
 void mostrar_datos(struct TDatos *a);
+void combate(PERSONAJE * lista_de_personajes, int pers1, int pers2);
 //Main
 int main(void){
 	srand(time(NULL));//Randomiza la seed
@@ -63,10 +65,12 @@ int main(void){
 	scanf("%d",&pers1);
 	printf("Jugador 2, seleccione a su personaje:(Ingrese un numero hasta %d)\n", cant);
 	scanf("%d",&pers2);
+	pers1 = pers1 - 1;
+	pers2 = pers2 - 1;
 	//Combate
 	combate(personajes,pers1,pers2);
-	//Fin del main
 	return 0;
+	//Fin del main
 }
 //Definicion de funciones
 //Funciones de Caracteristicas
@@ -142,57 +146,72 @@ void combate(PERSONAJE * lista_de_personajes, int pers1, int pers2){
 	//Daño maximo
 	int dm = 50000;
 	//Variable para guardar el daño
-	int damage;
+	float damage;
 	//Calculo previamente el poder de disparo de ambos personajes
-	int poder_de_disparo1 = lista_de_personajes[pers1].Caracteristicas.destreza * lista_de_personajes[pers1].Caracteristicas.fuerza * lista_de_personajes[pers1].Caracteristicas.Nivel;
-	int poder_de_disparo2 = lista_de_personajes[pers2].Caracteristicas.destreza * lista_de_personajes[pers2].Caracteristicas.fuerza * lista_de_personajes[pers2].Caracteristicas.Nivel;
+	float poder_de_disparo1 = lista_de_personajes[pers1].Caracteristicas->destreza * lista_de_personajes[pers1].Caracteristicas->fuerza * lista_de_personajes[pers1].Caracteristicas->Nivel;
+	float poder_de_disparo2 = lista_de_personajes[pers2].Caracteristicas->destreza * lista_de_personajes[pers2].Caracteristicas->fuerza * lista_de_personajes[pers2].Caracteristicas->Nivel;
 	//Hago lo mismo con el poder defensivo
-	int poder_defensivo1 = lista_de_personajes[pers1].Caracteristicas.Armadura * lista_de_personajes[pers1].Caracteristicas.velocidad;
-	int poder_defensivo2 = lista_de_personajes[pers2].Caracteristicas.Armadura * lista_de_personajes[pers2].Caracteristicas.velocidad;
+	float poder_defensivo1 = lista_de_personajes[pers1].Caracteristicas->Armadura * lista_de_personajes[pers1].Caracteristicas->velocidad;
+	float poder_defensivo2 = lista_de_personajes[pers2].Caracteristicas->Armadura * lista_de_personajes[pers2].Caracteristicas->velocidad;
 	//Implementacion de los valores
 	printf("El combate comienza!\n");
 	//Muestro la salud de ambos personajes antes del combate
-	printf("La salud de %s es: %d\n", lista_de_personajes[pers1].DatosPersonales.ApellidoNombre, lista_de_personajes[pers1].DatosPersonales.Salud);
-	printf("La salud de %s es: %d\n", lista_de_personajes[pers2].DatosPersonales.ApellidoNombre, lista_de_personajes[pers2].DatosPersonales.Salud);
+	printf("La salud de %s es: %.2f\n", lista_de_personajes[pers1].DatosPersonales->ApellidoNombre, lista_de_personajes[pers1].DatosPersonales->Salud);
+	printf("La salud de %s es: %.2f\n", lista_de_personajes[pers2].DatosPersonales->ApellidoNombre, lista_de_personajes[pers2].DatosPersonales->Salud);
+	printf("\n");
 	for (int i = 0; i < 3; ++i)
 	{	
 		//Ataca el primer personaje
-		printf("%s Ataca!\n",lista_de_personajes[pers1].DatosPersonales.ApellidoNombre);
+		printf("%s Ataca!\n",lista_de_personajes[pers1].DatosPersonales->ApellidoNombre);
 		//Calculo el daño que causará
 		damage = (((poder_de_disparo1 * 1+rand()%100) - poder_defensivo2)/dm) * 100;
-		printf("%s ha causado %d puntos de daño!\n", lista_de_personajes[pers1].DatosPersonales.ApellidoNombre, damage);
+		printf("%s ha causado %.2f puntos de daño!\n", lista_de_personajes[pers1].DatosPersonales->ApellidoNombre, damage);
 		//Resto el daño a la salud del segundo personaje
-		lista_de_personajes[pers2].DatosPersonales.Salud = lista_de_personajes[pers2].DatosPersonales.Salud - damage;
+		lista_de_personajes[pers2].DatosPersonales->Salud = lista_de_personajes[pers2].DatosPersonales->Salud - damage;
 		//Controlo la condicion de victoria
-		if (lista_de_personajes[pers2].DatosPersonales.Salud <= 0)
+		if (lista_de_personajes[pers2].DatosPersonales->Salud <= 0)
 		{
-			printf("La salud de %s es ahora: %d\n", lista_de_personajes[pers2].DatosPersonales.ApellidoNombre, lista_de_personajes[pers2].DatosPersonales.Salud);
-			printf("%s ha perdido!!\n", lista_de_personajes[pers2].DatosPersonales.ApellidoNombre);
+			printf("La salud de %s es ahora: %.2f\n", lista_de_personajes[pers2].DatosPersonales->ApellidoNombre, lista_de_personajes[pers2].DatosPersonales->Salud);
+			printf("%s ha perdido!!\n", lista_de_personajes[pers2].DatosPersonales->ApellidoNombre);
 			break;
 		}
 		//Continua el combate
-		printf("La salud de %s es ahora: %d\n", lista_de_personajes[pers2].DatosPersonales.ApellidoNombre, lista_de_personajes[pers2].DatosPersonales.Salud);
+		printf("La salud de %s es ahora: %.2f\n", lista_de_personajes[pers2].DatosPersonales->ApellidoNombre, lista_de_personajes[pers2].DatosPersonales->Salud);
 		//Pausa
 		printf("Presione enter para continuar...\n");
 		getch();
+		printf("\n");
 		//Ataca el segundo personaje
-		printf("%s Ataca!\n",lista_de_personajes[pers2].DatosPersonales.ApellidoNombre);
+		printf("%s Ataca!\n",lista_de_personajes[pers2].DatosPersonales->ApellidoNombre);
 		//Calculo el daño que causará
 		damage = (((poder_de_disparo2 * 1+rand()%100) - poder_defensivo1)/dm) * 100;
-		printf("%s ha causado %d puntos de daño!\n", lista_de_personajes[pers2].DatosPersonales.ApellidoNombre, damage);
+		printf("%s ha causado %.2f puntos de daño!\n", lista_de_personajes[pers2].DatosPersonales->ApellidoNombre, damage);
 		//Resto el daño a la salud del primer personaje
-		lista_de_personajes[pers1].DatosPersonales.Salud = lista_de_personajes[pers1].DatosPersonales.Salud - damage;
+		lista_de_personajes[pers1].DatosPersonales->Salud = lista_de_personajes[pers1].DatosPersonales->Salud - damage;
 		//Controlo la condicion de victoria
-		if (lista_de_personajes[pers1].DatosPersonales.Salud <= 0)
+		if (lista_de_personajes[pers1].DatosPersonales->Salud <= 0)
 		{
-			printf("La salud de %s es ahora: %d\n", lista_de_personajes[pers1].DatosPersonales.ApellidoNombre, lista_de_personajes[pers1].DatosPersonales.Salud);
-			printf("%s ha perdido!!\n", lista_de_personajes[pers1].DatosPersonales.ApellidoNombre);
+			printf("La salud de %s es ahora: %.2f\n", lista_de_personajes[pers1].DatosPersonales->ApellidoNombre, lista_de_personajes[pers1].DatosPersonales->Salud);
+			printf("%s ha perdido!!\n", lista_de_personajes[pers1].DatosPersonales->ApellidoNombre);
 			break;
 		}
 		//Continua el combate
-		printf("La salud de %s es ahora: %d\n", lista_de_personajes[pers1].DatosPersonales.ApellidoNombre, lista_de_personajes[pers1].DatosPersonales.Salud);
+		printf("La salud de %s es ahora: %.2f\n", lista_de_personajes[pers1].DatosPersonales->ApellidoNombre, lista_de_personajes[pers1].DatosPersonales->Salud);
 		//Pausa
 		printf("Presione enter para continuar...\n");
 		getch();
+		printf("\n");
+	}
+	if (lista_de_personajes[pers1].DatosPersonales->Salud > lista_de_personajes[pers2].DatosPersonales->Salud)
+	{
+		printf("%s gana!\n",lista_de_personajes[pers1].DatosPersonales->ApellidoNombre);
+	}
+	else if (lista_de_personajes[pers1].DatosPersonales->Salud == lista_de_personajes[pers2].DatosPersonales->Salud)
+	{
+		printf("Es un empate!!\n");
+	}
+	else
+	{
+		printf("%s gana!\n",lista_de_personajes[pers2].DatosPersonales->ApellidoNombre);
 	}
 }
