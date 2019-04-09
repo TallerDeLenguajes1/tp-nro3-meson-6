@@ -62,7 +62,7 @@ int main(void){
 	PD2 = personaje2.Caracteristicas->destreza * personaje2.Caracteristicas->fuerza * personaje2.Caracteristicas->Nivel;
 	for (int i = 0; i < 3; ++i)
 	{
-		if(personaje1.DatosPersonales->Salud <= 0 || personaje2.DatosPersonales->Salud <= 0){
+		if(personaje1.DatosPersonales->Salud <= 0 || personaje2.DatosPersonales->Salud <b= 0){
 			break;
 		}
 		ED1 = rand() % 100 + 1;
