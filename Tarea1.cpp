@@ -139,33 +139,49 @@ void mostrar_datos(struct TDatos *a){
 //------------JUEGO-------------------------
 void juego(struct TPersonaje p1, struct TPersonaje p2){
 	
-	float PD1, ED1, VA1, PDEF1, DANIO1, PD2, ED2, VA2, PDEF2, DANIO2, MDP=50000;
+	int i=1;
+	float PD1, ED1, VA1, PDEF1, DAN1, PD2, ED2, VA2, PDEF2, DAN2, MDP=50000;
 
 	mostrar_datos(p1.DatosPersonales);
 	mostrarcaract(p1.Caracteristicas);
 
 	mostrar_datos(p2.DatosPersonales);
 	mostrarcaract(p2.Caracteristicas);
-
-	for (int i = 1; i <= 3; ++i)
-	{
-		printf("---------ROUND %d---------", i);
+			
+	while(i <= 3 &&  p1.DatosPersonales->Salud>0 && p2.DatosPersonales->Salud >0){
 		
-		PD1 = p1.Caracteristicas.destreza * p1.Caracteristicas.fuerza * p1.Caracteristicas.Nivel;
+		printf("\n---------ROUND %d---------\n", i);
+		
+		PD1 = p1.Caracteristicas->destreza * p1.Caracteristicas->fuerza * p1.Caracteristicas->Nivel;
 		ED1 = rand()%99 +1;
-		VA1 = (PD1 * ED1)/100;
-		PDEF1 = p1.Caracteristicas.Armadura * p1.Caracteristicas.velocidad;
+		VA1 = (PD1 * ED1);
+		PDEF1 = p1.Caracteristicas->Armadura * p1.Caracteristicas->velocidad;
 
-		PD2 = p2.Caracteristicas.destreza * p2.Caracteristicas.fuerza * p2.Caracteristicas.Nivel;
+		PD2 = p2.Caracteristicas->destreza * p2.Caracteristicas->fuerza * p2.Caracteristicas->Nivel;
 		ED2 = rand()%99 +1;
-		VA2 = PD2 * ED2/100;
-		PDEF2 = p2.Caracteristicas.Armadura * p2.Caracteristicas.velocidad;
+		VA2 = PD2 * ED2;
+		PDEF2 = p2.Caracteristicas->Armadura * p2.Caracteristicas->velocidad;
 
-		DAÑO1 = (VA1-PDEF2)/MDP)*100;
+		DAN1 = ((VA1-PDEF2)/MDP)*100;
+		DAN2 = ((VA2-PDEF1)/MDP)*100;
+
+		p1.DatosPersonales->Salud = p1.DatosPersonales->Salud - DAN2;
+		p2.DatosPersonales->Salud = p2.DatosPersonales->Salud - DAN1;
+
+		printf("\n%s\n  Danio recibido: %.2f  | Salud: %.2f ", p1.DatosPersonales->ApellidoNombre, DAN2, p1.DatosPersonales->Salud);
+		printf("\n%s\n  Danio recibido: %.2f  | Salud: %.2f ", p2.DatosPersonales->ApellidoNombre, DAN1, p2.DatosPersonales->Salud);
+		i = i+1;
 
 	}
-
-
+	if(p1.DatosPersonales->Salud == p2.DatosPersonales->Salud){
+		printf("\n ========EMPATE=========");
+	}else{
+		if(p1.DatosPersonales->Salud > p2.DatosPersonales->Salud){
+			printf("\n\n=========== Ganador: %s ===============", p1.DatosPersonales->ApellidoNombre);
+		}else{
+			printf("\n\n=========== Ganador: %s ===============", p2.DatosPersonales->ApellidoNombre);
+		}
+	}
 }
 
 
