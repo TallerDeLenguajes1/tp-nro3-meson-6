@@ -8,12 +8,14 @@ enum TRaza{Orco, Humano, Mago, Enano, Elfo};
 char Nombres[5][20]={"Merodeador", "Rompehuesos", "Algoritmico", "Proscripto", "Cruzamontanias"};
 char Apellidos[5][20]={" Furioso", " Mistico", " Peregrino", " Galactico", " Sabio"};
 
+
 struct TDatos {
 	TRaza Raza; //nota 1
 	char *ApellidoNombre; //nota 2
 	int edad; //entre 0 a 300
 	double Salud;//100
 };
+
 struct TCaracteristicas{
 	int velocidad;// 1 a 10
 	int destreza; //1 a 5
@@ -21,42 +23,61 @@ struct TCaracteristicas{
 	int Nivel; //1 a 10
 	int Armadura; //1 a 10
 };
+
 struct TPersonaje {
 	TDatos * DatosPersonales;  // null
 	TCaracteristicas * Caracteristicas; // null 
+	struct TPersonaje *siguiente;
 };
+
+
+
 void cargarcaract(struct TCaracteristicas * CaracPers);
 void mostrarcaract(struct TCaracteristicas * CaracPers);
 void cargar_datos(struct TDatos *puntero);
 void mostrar_datos(struct TDatos *a);
-void juego(struct TPersonaje, struct TPersonaje);
+void juego(struct TPersonaje*);
+
 
 int main(void){
 	
 	srand(time(NULL));
 	
-	struct TPersonaje * Lista, p1, p2;
+	struct TPersonaje *Lista = NULL, *aux;
+	int p1, p2;
+	
 	int cant;
 	
 	printf("Cuantos personajes desea cargar?:\n");
 	scanf("%d", &cant);
 	
-	Lista = (struct TPersonaje *) malloc(sizeof(struct TPersonaje)*cant);
+	fflush(stdin);
+
 	
-	for (int t = 0; t < cant; ++t)
-	{
-		fflush(stdin);
-		Lista[t].DatosPersonales = (struct TDatos * )malloc(sizeof(struct TDatos));
-		Lista[t].Caracteristicas = (struct TCaracteristicas * )malloc(sizeof(struct TCaracteristicas));
-		cargar_datos(Lista[t].DatosPersonales); // (personaje . datospersonales) (* Tdatos)
-		cargarcaract(Lista[t].Caracteristicas);
+	for (int t = 0; t < cant; t++)
+	{	
+
+		struct TPersonaje *nuevo;
+		nuevo = (struct TPersonaje*) malloc(sizeof(struct TPersonaje));
+
+		nuevo->siguiente = Lista;
+		Lista = nuevo;
+	
+		Lista->DatosPersonales = (struct TDatos * )malloc(sizeof(struct TDatos));
+		Lista->Caracteristicas = (struct TCaracteristicas * )malloc(sizeof(struct TCaracteristicas));
+		
+		cargar_datos(Lista->DatosPersonales); 
+		cargarcaract(Lista->Caracteristicas);
 	}
-	
 
-	p1= Lista[rand()%cant];
-	p2= Lista[rand()%cant];
+	for (aux = Lista; aux != NULL ; aux = aux->siguiente)
+	{	
+		mostrar_datos(aux->DatosPersonales);
+		mostrarcaract(aux->Caracteristicas);
+	}
 
-	juego(p1,p2);
+
+	juego(Lista);
 
 
 	return 0;
@@ -137,10 +158,33 @@ void mostrar_datos(struct TDatos *a){
 }
 
 //------------JUEGO-------------------------
-void juego(struct TPersonaje p1, struct TPersonaje p2){
+void juego(struct TPersonaje *Lista){
 	
-	int i=1;
+	int per1, per2, cont=0, i=1;
 	float PD1, ED1, VA1, PDEF1, DAN1, PD2, ED2, VA2, PDEF2, DAN2, MDP=50000;
+	
+	struct TPersonaje *aux = Lista, p1, p2;
+
+	printf("\n Ingrese primer personaje que va a pelear: ");
+	scanf("%d",&per1);
+	printf("\n Ingrese segundo personaje que va a pelear: ");
+	scanf("%d",&per2);
+
+	while( aux != NULL ){
+		
+		cont = cont +1;
+		
+		if(cont == per1){
+			p1 = *aux;
+		}
+		
+		if(cont == per2){
+			p2 = *aux;
+		}
+		aux = aux->siguiente;
+	}
+	printf("salio while");
+	
 
 	mostrar_datos(p1.DatosPersonales);
 	mostrarcaract(p1.Caracteristicas);
@@ -186,4 +230,5 @@ void juego(struct TPersonaje p1, struct TPersonaje p2){
 
 
 
-// Daño provocado en formula el EP no va
+// Daño provocado en formula el EP no v
+
