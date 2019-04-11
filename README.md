@@ -6,17 +6,25 @@ Valores de Ataque
 
 <li>Poder de Disparo: Haga el producto de Destreza * Fuerza * Nivel del
 personaje que ataca (PD)
-? Efectividad de Disparo:Genere un valor aleatorio de 1 a 100. Considerarlo
+  
+<li> Efectividad de Disparo:Genere un valor aleatorio de 1 a 100. Considerarlo
 como valor porcentual (ED)
-? Valor de Ataque:Al Poder de Disparo lo multiplico por la Efectividad de
+  
+<li> Valor de Ataque:Al Poder de Disparo lo multiplico por la Efectividad de
 Disparo. (VA)
-Valores de Defensa
-? Poder de Defensa: Haga el producto de Armadura * Velocidad del personaje
+  
+<h1>Valores de Defensa</h1>
+  
+<li> Poder de Defensa: Haga el producto de Armadura * Velocidad del personaje
 que defiende (PDEF)
-Resultado del enfrentamiento
-? máximo daño provocable: 50000 (MDP)
-? Daño provocado: Valor de Ataque*Efectividad de Disparo - Poder de Defensa
+  
+<h1>Resultado del enfrentamiento</h1>
+
+<li> máximo daño provocable: 50000 (MDP)
+  
+<li> Daño provocado: Valor de Ataque*Efectividad de Disparo - Poder de Defensa
 todo eso dividido por el máximo daño provocado (50000) y a todo eso lo
 multiplico por 100 ? ((VA*EP)-PDEF)/MDP)*100
-? Actualizar salud del personaje que se defiende Restándole a Salud el Daño
+  
+<li> Actualizar salud del personaje que se defiende Restándole a Salud el Daño
 provocado.
