@@ -25,25 +25,41 @@ struct TCaracteristicas{
 };
 
 struct TPersonaje {
-	TDatos * DatosPersonales;  // null
-	TCaracteristicas * Caracteristicas; // null 
-	struct TPersonaje *siguiente;
+	struct TDatos * DatosPersonales;  // null
+	struct TCaracteristicas * Caracteristicas; // null 
 };
 
+struct nodo{
+	struct TPersonaje pj;
+	int id;
+	struct nodo *siguiente;
+};
+
+typedef struct nodo *lista;
 
 
-void cargarcaract(struct TCaracteristicas * CaracPers);
-void mostrarcaract(struct TCaracteristicas * CaracPers);
-void cargar_datos(struct TDatos *puntero);
-void mostrar_datos(struct TDatos *a);
+lista insertarIni(lista);
+lista insertarFin(lista);
+lista eliminar(lista);
+lista eliminarX(lista,int);
+TPersonaje buscar(lista);
+
+
+
+void cargarCaract(struct TCaracteristicas * CaracPers);
+void mostrarCaract(struct TCaracteristicas * CaracPers);
+void cargarDatos(struct TDatos *puntero);
+void mostrarDatos(struct TDatos *a);
 void juego(struct TPersonaje*);
+
+
 
 
 int main(void){
 	
 	srand(time(NULL));
 	
-	struct TPersonaje *Lista = NULL, *aux;
+	lista jugadores = NULL;
 	int p1, p2;
 	
 	int cant;
@@ -66,14 +82,14 @@ int main(void){
 		Lista->DatosPersonales = (struct TDatos * )malloc(sizeof(struct TDatos));
 		Lista->Caracteristicas = (struct TCaracteristicas * )malloc(sizeof(struct TCaracteristicas));
 		
-		cargar_datos(Lista->DatosPersonales); 
-		cargarcaract(Lista->Caracteristicas);
+		cargarDatos(Lista->DatosPersonales); 
+		cargarCaract(Lista->Caracteristicas);
 	}
 
-	for (aux = Lista; aux != NULL ; aux = aux->siguiente)
+	for (nuevo = Lista; nuevo != NULL ; nuevo = nuevo->siguiente)
 	{	
-		mostrar_datos(aux->DatosPersonales);
-		mostrarcaract(aux->Caracteristicas);
+		mostrarDatos(nuevo->DatosPersonales);
+		mostrarCaract(nuevo->Caracteristicas);
 	}
 
 
@@ -83,7 +99,7 @@ int main(void){
 	return 0;
 }
 
-void cargarcaract(struct TCaracteristicas * CaracPers){
+void cargarCaract(struct TCaracteristicas * CaracPers){
 	CaracPers->velocidad = rand()%10 + 1;
 	CaracPers->destreza = rand()%5 + 1;
 	CaracPers->fuerza = rand()%10 + 1;
@@ -91,7 +107,7 @@ void cargarcaract(struct TCaracteristicas * CaracPers){
 	CaracPers->Armadura = rand()%10 + 1;
 }
 
-void mostrarcaract(struct TCaracteristicas * CaracPers){
+void mostrarCaract(struct TCaracteristicas * CaracPers){
 	printf("Velocidad: %d\n", CaracPers->velocidad);
 	printf("Destreza: %d\n", CaracPers->destreza);
 	printf("Fuerza: %d\n", CaracPers->fuerza);
@@ -99,7 +115,7 @@ void mostrarcaract(struct TCaracteristicas * CaracPers){
 	printf("Armadura: %d\n", CaracPers->Armadura);
 }
 
-void cargar_datos(struct TDatos *puntero){
+void cargarDatos(struct TDatos *puntero){
 	char AM[100];
 
 	strcpy(AM, Nombres[rand()%5]);
@@ -130,7 +146,7 @@ void cargar_datos(struct TDatos *puntero){
 
 }
 
-void mostrar_datos(struct TDatos *a){
+void mostrarDatos(struct TDatos *a){
 	
 	printf("\nRaza:");
 	switch(a->Raza){
@@ -163,34 +179,34 @@ void juego(struct TPersonaje *Lista){
 	int per1, per2, cont=0, i=1;
 	float PD1, ED1, VA1, PDEF1, DAN1, PD2, ED2, VA2, PDEF2, DAN2, MDP=50000;
 	
-	struct TPersonaje *aux = Lista, p1, p2;
+	struct TPersonaje *nuevo = Lista, p1, p2;
 
 	printf("\n Ingrese primer personaje que va a pelear: ");
 	scanf("%d",&per1);
 	printf("\n Ingrese segundo personaje que va a pelear: ");
 	scanf("%d",&per2);
 
-	while( aux != NULL ){
+	while( nuevo != NULL ){
 		
 		cont = cont +1;
 		
 		if(cont == per1){
-			p1 = *aux;
+			p1 = *nuevo;
 		}
 		
 		if(cont == per2){
-			p2 = *aux;
+			p2 = *nuevo;
 		}
-		aux = aux->siguiente;
+		nuevo = nuevo->siguiente;
 	}
 	printf("salio while");
 	
 
-	mostrar_datos(p1.DatosPersonales);
-	mostrarcaract(p1.Caracteristicas);
+	mostrarDatos(p1.DatosPersonales);
+	mostrarCaract(p1.Caracteristicas);
 
-	mostrar_datos(p2.DatosPersonales);
-	mostrarcaract(p2.Caracteristicas);
+	mostrarDatos(p2.DatosPersonales);
+	mostrarCaract(p2.Caracteristicas);
 			
 	while(i <= 3 &&  p1.DatosPersonales->Salud>0 && p2.DatosPersonales->Salud >0){
 		
@@ -229,6 +245,85 @@ void juego(struct TPersonaje *Lista){
 }
 
 
+//===========================================
 
-// Daño provocado en formula el EP no v
+/*struct TDatos {
+	TRaza Raza; //nota 1
+	char *ApellidoNombre; //nota 2
+	int edad; //entre 0 a 300
+	double Salud;//100
+};
 
+struct TCaracteristicas{
+	int velocidad;// 1 a 10
+	int destreza; //1 a 5
+	int fuerza;//1 a 10
+	int Nivel; //1 a 10
+	int Armadura; //1 a 10
+};
+
+struct TPersonaje {
+	TDatos * DatosPersonales;  // null
+	TCaracteristicas * Caracteristicas; // null 
+};
+
+struct nodo{
+	struct TPersonaje pj;
+	int id;
+	struct nodo *siguiente;
+};
+
+*/
+
+lista insertarIni(lista l){
+	struct nodo *nuevo;
+
+	nuevo= (struct nodo*) malloc(sizeof(struct nodo));
+
+	nuevo->pj.DatosPersonales = (struct TDatos * )malloc(sizeof(struct TDatos));
+	nuevo->pj.Caracteristicas = (struct TCaracteristicas * )malloc(sizeof(struct TCaracteristicas));
+
+	cargarDatos(nuevo->pj.DatosPersonales); 
+	cargarCaract(nuevo->pj.Caracteristicas);
+
+	nuevo->id = rand()%999+1;
+
+	nuevo->siguiente = l;
+	l = nuevo;
+
+	return l;
+}
+
+
+lista insertarFin(lista l){
+	struct nodo *nuevo;
+	lista aux = l;
+	
+	nuevo = (struct nodo*) malloc(sizeof(struct nodo));
+
+	nuevo->pj.DatosPersonales = (struct TDatos * )malloc(sizeof(struct TDatos));
+	nuevo->pj.Caracteristicas = (struct TCaracteristicas * )malloc(sizeof(struct TCaracteristicas));
+
+	cargarDatos(nuevo->pj.DatosPersonales); 
+	cargarCaract(nuevo->pj.Caracteristicas);
+
+	while(aux != NULL ){
+		aux = aux->siguiente;
+	}
+
+
+
+}
+	
+
+
+
+
+
+
+
+
+
+lista eliminar(lista);
+lista eliminarX(lista,int);
+TPersonaje buscar(lista);
